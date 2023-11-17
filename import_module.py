@@ -48,14 +48,14 @@ def import_virus_total_data(file_hash, api_key):
     
     response = requests.get(url, headers=headers)
     data = response.json()
-    print(data)
- 
+
     
     av_detects = []
-    
-    for engine, result in data["data"]["attributes"]["last_analysis_results"].items():
-        if result["category"] == "malicious" and result["result"] != "null":
-            av_detects.append(result["result"])
-    
+    try:
+        for engine, result in data["data"]["attributes"]["last_analysis_results"].items():
+            if result["category"] == "malicious" and result["result"] != "null":
+                av_detects.append(result["result"])
+    except: 
+        pass
     return av_detects
 
