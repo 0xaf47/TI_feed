@@ -4,13 +4,14 @@ import analytics_module
 import export_module
 
 def main():
-    # Шаг 1: импорт данных из источников
-    malware_bazaar_data = import_module.import_malware_bazaar_data()
-    apt_etda_data = import_module.import_apt_etda_data()
-    virus_total_data = import_module.import_virus_total_data()
+    with open('README.md', 'r') as readme_file:
+        print(readme_file.read())
 
+    # Просьба ввести ключ VT
+    api_key = input("Для продолжения работы введите API ключ VirusTotal: ")
+    print("API ключ введен: ", api_key)
     # Шаг 2: совмещение данных для сравнения информации из разных источников
-    merged_data = merge_module.merge_data(malware_bazaar_data, apt_etda_data, virus_total_data)
+    merged_data = merge_module.merge_data(api_key)
 
     # Шаг 3: анализ контекста индикатора и заполнение поля threat_level
     analyzed_data = analytics_module.analyze_data(merged_data)

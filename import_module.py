@@ -17,7 +17,7 @@ def import_apt_etda_data(tool_name):
     # здесь происходит импорт данных из источника APT ETDA
     url = f'https://apt.etda.or.th/cgi-bin/listtools.cgi?c=&t=&x={tool_name}'
     response = requests.get(url)
-    
+    # Отправляем поисковые запросы, находим ссылки на страницы инструмента и берем первую (самая релевантная) 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
         links = soup.find_all('a', class_='inlink')
@@ -26,7 +26,7 @@ def import_apt_etda_data(tool_name):
         if tool_links:
             tool_url = 'https://apt.etda.or.th' + tool_links[0]
             tool_response = requests.get(tool_url)
-            
+            # На странице инструмента берем поле Type
             if tool_response.status_code == 200:
                 tool_soup = BeautifulSoup(tool_response.content, 'html.parser')
                 type_field = tool_soup.find('td', string='Type')
@@ -48,14 +48,14 @@ def import_virus_total_data(file_hash, api_key):
     
     response = requests.get(url, headers=headers)
     data = response.json()
+    print(data)
  
     
     av_detects = []
     
     for engine, result in data["data"]["attributes"]["last_analysis_results"].items():
-        if result["category"] == "malicious":
-            av_detects.append(engine)
+        if result["category"] == "malicious" and result["result"] != "null":
+            av_detects.append(result["result"])
     
     return av_detects
-#print(import_malware_bazaar_data())
-#print(import_apt_etda_data("Formbook"))
+
